@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Comandi e tasti del server Diamond RP">
+<title>Comandi Diamond RP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: banda titolo + barra filtri fissa, poi indice categorie a sinistra e schede script a destra (una colonna sul telefono). Stile Facet di Diamond RP, solo scuro. */
+:root{
+  --bg:#0c0d09; --panel:#15140f; --well:#0b0b08;
+  --ink:#f1f0e9; --ink2:#d4d2c7; --mute:#a3a092; --faint:#858275;
+  --hair:rgba(241,240,233,.12); --hair2:rgba(241,240,233,.22);
+  --lime:#beee11; --lime-hi:#d3ff3d; --lime-ink:#12140a;
+  --job:#b28cff; --admin:#ff5467; --warn:#ffc23d;
+  --brand:linear-gradient(90deg,#a855f7 0%,#fc2d84 38%,#fb7a2c 68%,#ffd23f 100%);
+  --f-title:'Oswald','Arial Narrow',Impact,sans-serif;
+  --f-body:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+  --f-num:'JetBrains Mono',Consolas,ui-monospace,monospace;
+  --cut:8px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1180px;margin:0 auto}
+.brandline{height:3px;background:var(--brand);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
+header.top{padding-block:28px 18px;display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+.eyebrow{font-family:var(--f-title);font-weight:600;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--lime)}
+h1{font-family:var(--f-title);font-style:italic;font-weight:700;text-transform:uppercase;font-size:clamp(30px,5vw,46px);line-height:1;margin:6px 0 0;letter-spacing:.01em;text-wrap:balance}
+.lede{color:var(--mute);margin:10px 0 0;max-width:62ch}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:var(--panel);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut));padding:10px 14px;min-width:96px}
+.stat b{display:block;font-family:var(--f-num);font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--hair);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search{flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:8px;background:var(--well);border:1px solid var(--hair2);padding:0 12px;height:40px}
+.search:focus-within{border-color:var(--lime)}
+.search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font-family:var(--f-num);font-size:14px}
+.search input::placeholder{color:var(--faint)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button,.chips button{font-family:var(--f-title);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12px;height:40px;padding:0 14px;border:1px solid var(--hair2);background:var(--panel);color:var(--ink2);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--lime);border-color:var(--lime);color:var(--lime-ink)}
+.seg button:focus-visible,.chips button:focus-visible,.cmd:focus-visible{outline:2px solid var(--lime-hi);outline-offset:2px}
+
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;margin-top:22px}
+nav.cats{position:sticky;top:76px;align-self:start;display:flex;flex-direction:column;gap:2px}
+nav.cats a{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;color:var(--ink2);text-decoration:none;font-family:var(--f-title);font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-size:13px;border-left:2px solid transparent}
+nav.cats a:hover{color:var(--ink);border-left-color:var(--hair2)}
+nav.cats a.on{color:var(--lime);border-left-color:var(--lime)}
+nav.cats a i{font-style:normal;font-family:var(--f-num);color:var(--faint);font-size:12px}
+.legend{margin-top:18px;padding:12px 10px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:8px;color:var(--mute);font-size:12px}
+
+section.cat{scroll-margin-top:80px}
+section.cat + section.cat{margin-top:34px}
+.cat > h2{font-family:var(--f-title);font-style:italic;font-weight:700;text-transform:uppercase;font-size:24px;margin:0 0 12px;display:flex;align-items:baseline;gap:12px}
+.cat > h2 small{font-family:var(--f-num);font-style:normal;font-weight:500;font-size:12px;color:var(--faint)}
+.script{background:var(--panel);clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.script + .script{margin-top:10px}
+.script header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:12px 16px 10px;border-bottom:1px solid var(--hair)}
+.script header h3{margin:0;font-family:var(--f-title);font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.04em}
+.script header code{font-family:var(--f-num);font-size:12px;color:var(--faint)}
+.script header p{flex-basis:100%;margin:2px 0 0;color:var(--mute);font-size:13px}
+.row{display:grid;grid-template-columns:minmax(150px,240px) 92px minmax(0,1fr) auto;gap:6px 14px;align-items:start;padding:9px 16px;border-top:1px solid var(--hair)}
+.row:first-of-type{border-top:0}
+.cmd{font-family:var(--f-num);font-weight:600;font-size:13.5px;color:var(--lime);background:none;border:0;padding:0;text-align:left;cursor:copy;overflow-wrap:anywhere}
+.cmd .p{color:var(--mute);font-weight:500}
+.cmd.key{color:var(--ink);cursor:default}
+.who{justify-self:start;font-family:var(--f-title);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border:1px solid currentColor;white-space:nowrap}
+.who.all{color:var(--lime)} .who.job{color:var(--job)} .who.admin{color:var(--admin)} .who.unk{color:var(--mute);border-style:dashed}
+.toggle{display:flex;align-items:center;gap:8px;height:40px;padding:0 4px;color:var(--ink2);font-size:13px;cursor:pointer;user-select:none}
+.toggle input{width:16px;height:16px;accent-color:var(--lime);margin:0}
+details.issues{border:1px solid rgba(190,238,17,.4);background:rgba(190,238,17,.05);margin-bottom:26px}
+details.issues summary{cursor:pointer;padding:12px 16px;font-family:var(--f-title);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:14px;color:var(--lime)}
+details.issues summary:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+details.issues ul{margin:0;padding:0 16px 14px 34px;display:grid;gap:8px}
+details.issues li{color:var(--ink2);max-width:90ch}
+details.issues li b{color:var(--ink);font-weight:600}
+.desc{color:var(--ink2);min-width:0}
+.desc .jobname{color:var(--job);font-weight:600}
+.desc .note{display:block;color:var(--faint);font-size:12px;margin-top:2px}
+.kbd{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+kbd{font-family:var(--f-num);font-size:12px;background:var(--well);border:1px solid var(--hair2);border-bottom-width:2px;padding:1px 7px;color:var(--ink);white-space:nowrap}
+.tag{font-family:var(--f-num);font-size:11px;color:var(--warn);border:1px dashed var(--warn);padding:0 5px;margin-left:6px;vertical-align:1px}
+.empty{padding:40px 16px;text-align:center;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--lime);color:var(--lime-ink);font-family:var(--f-title);font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:8px 16px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+footer{margin-top:40px;color:var(--faint);font-size:12px;border-top:1px solid var(--hair);padding-top:14px}
+
+@media (max-width:820px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  nav.cats{position:static;flex-direction:row;flex-wrap:wrap;gap:6px}
+  nav.cats a{border-left:0;border:1px solid var(--hair2);padding:6px 10px}
+  .legend{display:none}
+  .row{grid-template-columns:minmax(0,1fr) auto}
+  .row .desc{grid-column:1 / -1}
+  .row .kbd{grid-column:1 / -1;justify-content:flex-start}
+  .row .kbd:empty{display:none}
+}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="brandline"></div>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Diamond RP · Guida per i giocatori</div>
+      <h1>Comandi del server</h1>
+      <p class="lede">Tutti i comandi e i tasti che puoi usare in città, anche quelli dei lavori. Clicca un comando per copiarlo.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="bar">
+    <label class="search" for="q">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--faint)"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" style="color:var(--faint)"/></svg>
+      <input id="q" type="search" placeholder="Cerca: casa, radio, animazioni, F5…" autocomplete="off">
+    </label>
+    <div class="seg" role="group" aria-label="Chi può usarlo">
+      <button type="button" data-who="" aria-pressed="true">Tutto</button>
+      <button type="button" data-who="all" aria-pressed="false">Giocatori</button>
+      <button type="button" data-who="job" aria-pressed="false">Lavori</button>
+      
+    </div>
+    
+  </div>
+
+  <div class="layout">
+    <nav class="cats" id="cats" aria-label="Categorie"></nav>
+    <main id="list"></main>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+<div class="toast" id="toast">Copiato</div>
+
+<script>
+/*DATA*/
+const __D = {"DATA":[{"name":"Base e chat","scripts":[{"name":"Chat","res":"","about":"La chat libera senza “/” è bloccata: si scrive solo con i comandi.","cmds":[{"label":"Apri chat","key":["T"],"who":"all","d":"Apre la chat."},{"label":"Visibilità chat","key":["L"],"who":"all","d":"Cambia tra: visibile quando attiva, sempre, mai.","note":"Col pannello allarmi della polizia aperto L chiude l’intervento e non tocca la chat."},{"c":"/me","p":"[azione]","who":"all","d":"Azione RP scritta in 3D sopra la testa (20 m), non in chat."},{"c":"/ooc","p":"[msg]","who":"all","d":"Chat OOC globale."},{"c":"/ic","p":"[msg]","who":"all","d":"Chat IC globale."},{"c":"/anon","p":"[msg]","who":"all","d":"Messaggio anonimo globale."},{"c":"/clear","p":"","who":"all","d":"Pulisce la tua chat."},{"c":"/chatedit","p":"","who":"all","d":"Sposta e ridimensiona la tua chat."},{"c":"/police","p":"[msg]","who":"job","d":"Annuncio della polizia a tutti (ogni 120 s).","job":"Polizia"},{"c":"/ems","p":"[msg]","who":"job","d":"Annuncio dell'ospedale a tutti (ogni 120 s).","job":"EMS"}]},{"name":"ESX","res":"","about":"","cmds":[{"label":"Interagisci","key":["E"],"who":"all","d":"Interazioni registrate dagli script ESX."},{"c":"/cls","p":"","who":"all","d":"Pulisce la tua chat."}]},{"name":"Inventario","res":"","cmds":[{"label":"Inventario","key":["F2"],"who":"all","d":"Apre l’inventario (in auto: vano portaoggetti)."},{"label":"Bagagliaio / deposito","key":["K"],"who":"all","d":"Bagagliaio del veicolo che guardi, vano portaoggetti o deposito."},{"label":"Hotbar","key":["TAB"],"who":"all","d":"Mostra o nasconde la barra rapida."},{"label":"Slot rapidi","key":["1","2","3","4","5"],"who":"all","d":"Usa l’oggetto nello slot."},{"label":"Ricarica","key":["R"],"who":"all","d":"Ricarica l’arma."},{"c":"/steal","p":"","who":"all","d":"Apre l’inventario del giocatore vicino se è morto, ammanettato o con le mani alzate."},{"c":"/clearevidence","p":"[armadietto]","who":"job","d":"Svuota un armadietto prove.","job":"Polizia (solo capo)"}]},{"name":"Mira e interazioni","res":"","cmds":[{"label":"Interazione (occhio)","key":["Alt sinistro"],"who":"all","d":"Tieni premuto per interagire con persone, oggetti e zone."},{"label":"Menu radiale","key":["8"],"who":"all","d":"Menu radiale ox_lib (oggi lo usa il menu lavoro DOJ).","note":"Era Z, che è il raggio voce."},{"label":"Annulla azione","key":["X"],"who":"all","d":"Annulla la barra di avanzamento, quando si può."},{"c":"/ox_lib","p":"","who":"all","d":"Impostazioni personali delle notifiche (suono, posizione)."}]},{"name":"Porte","res":"","cmds":[{"label":"Apri / chiudi porta","key":["E"],"who":"all","d":"Porta più vicina, se sei autorizzato."}]},{"name":"Voce","res":"","cmds":[{"label":"Raggio voce","key":["Z"],"who":"all","d":"Cambia quanto lontano ti sentono."},{"label":"Parla in radio","key":["Bloc Maiusc"],"who":"all","d":"Tieni premuto, con la radio accesa su un canale.","note":"Era Alt sinistro, lo stesso dell’occhio."},{"c":"/cycleproximity","p":"","who":"all","d":"Come il tasto Z."},{"c":"/vol","p":"[1-100]","who":"all","d":"Volume di radio e telefono."},{"c":"/setvoiceintent","p":"[speech|music]","who":"all","d":"Modalità del microfono."}]},{"name":"HUD e menu pausa","res":"","cmds":[{"label":"Controlli veicolo","key":["F6"],"who":"all","d":"Finestrini, portiere, sedili, motore. Solo in macchina."},{"label":"Cruise control","key":["G"],"who":"all","d":"Attiva o disattiva il cruise control."},{"label":"Frecce","key":["←","→","↑"],"who":"all","d":"Freccia sinistra, destra, quattro frecce."},{"label":"Ancora barca","key":["J"],"who":"all","d":"Ancora o salpa."},{"label":"Menu pausa","key":["ESC","P"],"who":"all","d":"Menu pausa Diamond."},{"c":"/hud","p":"","who":"all","d":"Impostazioni dell’HUD."},{"c":"/togglehud","p":"","who":"all","d":"Mostra o nasconde l’HUD."},{"c":"/pausemenu","p":"","who":"all","d":"Apre il menu pausa."},{"c":"/streamermode","p":"","who":"all","d":"Spegne la musica degli script (per chi fa live)."}]}]},{"name":"Staff e assistenza","scripts":[{"name":"Menu admin","res":"","cmds":[{"c":"/adminmenu","p":"","who":"all","d":"Apre la candidatura per entrare nello staff.","key":["F11"]},{"c":"/report","p":"","who":"all","d":"Manda una segnalazione allo staff (una ogni 60 s)."}]},{"name":"Cloni dei giocatori usciti","res":"","cmds":[{"label":"Testo del clone","key":["E"],"who":"all","d":"Nasconde o mostra il testo sul clone vicino."}]}]},{"name":"Personaggio e animazioni","scripts":[{"name":"Animazioni","res":"","cmds":[{"c":"/emotemenu","p":"","who":"all","d":"Menu animazioni.","key":["F4"]},{"c":"/emotecancel","p":"","who":"all","d":"Ferma l’animazione. Se non ce n’è, alza o abbassa le mani.","key":["X"]},{"c":"/e","p":"[animazione|c]","who":"all","d":"Fa un’animazione (c la ferma).","note":"Alias /emote"},{"c":"/walk","p":"[stile|c]","who":"all","d":"Cambia camminata."},{"c":"/expression","p":"[nome|c]","who":"all","d":"Espressione del viso.","note":"Alias /mood"},{"c":"/nearby","p":"[animazione]","who":"all","d":"Invita il giocatore vicino a un’animazione di coppia (Y accetta, H rifiuta)."},{"c":"/animpos","p":"[animazione]","who":"all","d":"Piazza un’animazione dove vuoi (frecce, rotella, INVIO conferma)."},{"c":"/sequence","p":"[id]","who":"all","d":"Fa una sequenza salvata."},{"c":"/crouch","p":"","who":"all","d":"Accovacciati.","key":["Ctrl sinistro"]},{"c":"/crawl","p":"","who":"all","d":"Striscia a terra.","key":["Ctrl destro"]},{"c":"/point","p":"","who":"all","d":"Indica con il dito.","key":["B"],"note":"B è anche il tasto della cintura."},{"c":"/handsup","p":"","who":"all","d":"Mani alzate (si usa X)."},{"c":"/idlecam","p":"","who":"all","d":"Accende o spegne la telecamera quando sei fermo."},{"label":"Ruota rapida","key":["6"],"who":"all","d":"Ruota rapida delle animazioni.","note":"Era Bloc Maiusc, che ora è la radio."},{"label":"Scorciatoie 1-7","key":["Shift + Num 1…7"],"who":"all","d":"Animazioni salvate."}]},{"name":"Armi","res":"","cmds":[{"c":"/armi","p":"","who":"all","d":"Menu armi: animazioni di mira, estrazione e armi sulla schiena.","note":"Il tasto si assegna da Impostazioni > Tasti > FiveM."}]},{"name":"Sedersi e trasportare","res":"","cmds":[{"c":"/sit","p":"","who":"all","d":"Siediti sulla seduta più vicina."},{"c":"/lay","p":"","who":"all","d":"Sdraiati sul letto o sulla panca più vicini."},{"label":"Alzati / lascia","key":["X"],"who":"all","d":"Ti alzi, oppure lasci chi o cosa stai trasportando."},{"label":"Ostaggio","key":["G","H"],"who":"all","d":"Con un ostaggio: G lo liberi, H lo uccidi (serve una munizione)."}]},{"name":"Copertura","res":"","cmds":[{"label":"Sporgiti dalla copertura","key":["Q","E"],"who":"all","d":"Tieni premuto mentre miri: sinistra o destra."}]},{"name":"Carta d’identità","res":"","cmds":[{"c":"/documento","p":"","who":"all","d":"Mostra la carta d’identità. Al municipio la ritiri."},{"label":"Gira la carta","key":["K"],"who":"all","d":"Con la carta aperta."}]}]},{"name":"Veicoli","scripts":[{"name":"Chiavi","res":"","cmds":[{"label":"Apri / chiudi","key":["U"],"who":"all","d":"Blocca o sblocca un veicolo di cui hai le chiavi."},{"c":"/daichiavi","p":"[id]","who":"all","d":"Presta le chiavi digitali (all’id o al più vicino)."},{"c":"/toglichiavi","p":"[id]","who":"all","d":"Riprendi le chiavi prestate."}]},{"name":"Cintura","res":"","cmds":[{"c":"/seatbelt","p":"","who":"all","d":"Allaccia o slaccia la cintura. Con la cintura scendi premendo F due volte.","key":["B"]}]},{"name":"Garage","res":"","cmds":[{"c":"/garage_unlock","p":"","who":"all","d":"Sblocca mouse e schermata del garage se restano bloccati."}]},{"name":"Portatarga","res":"","cmds":[{"c":"/portatarga","p":"","who":"all","d":"Gira la targa dell’auto collegata (serve il telecomando_targa)."}]},{"name":"Monopattini a noleggio","res":"","cmds":[{"label":"Stazione di noleggio","key":["E"],"who":"all","d":"Apre la stazione."}]}]},{"name":"Officine e meccanici","scripts":[{"name":"Officine","res":"","about":"","cmds":[{"label":"Menu meccanico","key":["F5"],"who":"job","d":"Lavaggio, riparazioni, ribalta, carburante, traino, pianale, fattura.","job":"Meccanici","note":"F5 è anche il menu rapido della polizia: lavori diversi, non si incrociano."}]},{"name":"Banco prova (dyno)","res":"","cmds":[{"label":"Al banco","key":["E","H","G","X"],"who":"all","d":"E aggancia e avvia il test, H centralina, G sgancia, X annulla."},{"c":"/dynoid","p":"","who":"all","d":"Mostra la tua licenza."}]},{"name":"Officine illegali","res":"","cmds":[{"label":"Nitro","key":["Shift sinistro"],"who":"all","d":"Tieni premuto, con il nitro montato."}]},{"name":"Gru Bennys","res":"","cmds":[{"label":"Telecomando gru","key":["F7"],"who":"job","d":"Prendi o posa il telecomando vicino al camion.","job":"Bennys, polizia, sequestri (in servizio)","note":"F7 è anche il menu EMS: lavori diversi, non si incrociano."},{"label":"Comandi gru","key":["W/S","A/D","Shift/Ctrl","Q/E","1","2","3","Spazio"],"who":"job","d":"Gancio, rotazione, su/giù, spreader, stabilizzatori, aggancia, cinghie, stop.","job":"Chi ha il telecomando"},{"label":"Lampeggianti","key":["E"],"who":"job","d":"Alla guida del camion.","job":"Autista"}]}]},{"name":"Polizia, EMS e giustizia","scripts":[{"name":"Chiamate","res":"","cmds":[{"c":"/911","p":"[messaggio]","who":"all","d":"Chiamata alla polizia con la tua posizione."},{"c":"/911ems","p":"[messaggio]","who":"all","d":"Chiamata ai medici."},{"c":"/force","p":"","who":"all","d":"Dentro un veicolo: allarme furto alla polizia con modello, colore e targa."}]},{"name":"Polizia","res":"","about":"Job tablet = polizia, sceriffo, EMS e governo.","cmds":[{"c":"/quickaccess","p":"","who":"job","d":"Menu rapido delle azioni di polizia.","job":"Polizia, sceriffo, governo","key":["F5"]},{"c":"/pcad","p":"","who":"job","d":"Tablet CAD (anche con l’oggetto police_cad).","job":"Job tablet","note":"Alias /cad, /openpolicecad, /police_cad"},{"c":"/esposar","p":"","who":"job","d":"Ammanetta o libera il giocatore vicino.","job":"Job tablet"},{"c":"/drag","p":"","who":"job","d":"Scorta o trascina il giocatore vicino (S indietro, X stop).","job":"Job tablet in servizio"},{"c":"/vehicleinof","p":"","who":"job","d":"Mette o toglie il giocatore vicino dal veicolo.","job":"Job tablet in servizio"},{"c":"/cachearPolice","p":"","who":"job","d":"Perquisisce il giocatore vicino.","job":"Job tablet in servizio"},{"c":"/placaje","p":"","who":"job","d":"Placcaggio.","job":"Polizia, sceriffo (grado 1+)"},{"c":"/qrr","p":"","who":"job","d":"Allarme “agente in pericolo”.","job":"Job tablet"},{"c":"/10-20","p":"","who":"job","d":"Manda la tua posizione alla centrale.","job":"Job tablet"},{"c":"/rpol","p":"[messaggio]","who":"job","d":"Messaggio in chat radio ai colleghi.","job":"Job tablet in servizio"},{"c":"/plceobj","p":"[oggetto]","who":"job","d":"Piazza coni, barriere, cartelli, chiodi, autovelox.","job":"Job tablet in servizio"},{"c":"/rmveobj","p":"","who":"job","d":"Toglie l’oggetto piazzato più vicino.","job":"Job tablet in servizio"},{"c":"/holster","p":"[tipo]","who":"job","d":"Sceglie la fondina.","job":"Polizia"},{"c":"/minimap","p":"","who":"job","d":"Dimensione della minimappa (3 stati).","job":"Job tablet in servizio"},{"c":"/k9menu","p":"","who":"job","d":"Ordini al cane.","job":"Polizia con K9","key":["9"],"note":"Era K, lo stesso del bagagliaio."},{"c":"/vehicleradar","p":"","who":"job","d":"Radar targhe. Num 8 blocca, Num 4 sposta.","job":"Veicoli di polizia","key":["Num 5"]},{"label":"Mini dispatch","key":["7","O","I"],"who":"job","d":"7 apre/chiude, O waypoint sull’allarme, I cancella.","job":"Job tablet in servizio","note":"Il 7 prima era U, lo stesso delle chiavi auto."},{"label":"Pannello allarmi","key":["←","→","J","L","Ctrl sx"],"who":"job","d":"Allarme precedente/successivo, in arrivo, chiudi, usa il mouse.","job":"In servizio","note":"Col pannello aperto questi tasti non fanno altro (frecce auto, ancora, chat, accovacciati)."},{"label":"Radio polizia","key":["Bloc Maiusc"],"who":"job","d":"Parla in radio.","job":"Con la radio di polizia","note":"Era Alt sinistro, lo stesso dell’occhio."},{"label":"Megafono","key":["Y"],"who":"job","d":"Su un veicolo di polizia.","job":"Polizia"},{"label":"Elicottero","key":["E"],"who":"job","d":"Telecamera o discesa con la corda.","job":"Polizia"},{"c":"/animradio","p":"","who":"all","d":"Cambia l’animazione della radio."}]},{"name":"Drone polizia","res":"","cmds":[{"label":"In volo","key":["G","E","Shift","X"],"who":"job","d":"Si usa con l’oggetto police_drone. G termica, E marca il bersaglio, Shift accelera, X esci.","job":"Polizia"}]},{"name":"Divise LSPD","res":"","cmds":[{"c":"/lspd","p":"[lista|debug]","who":"job","d":"Menu delle divise LSPD.","job":"Polizia, sceriffo"}]},{"name":"Ospedale","res":"","about":"EMS = ambulance, ems, doctor.","cmds":[{"c":"/emsJobMenu","p":"","who":"job","d":"Menu EMS: diagnosi, sedativo, trasporto, barella, chiamate.","job":"EMS in servizio","key":["F7"],"note":"F7 è anche la gru Bennys: lavori diversi, non si incrociano."},{"c":"/dispatch","p":"","who":"job","d":"Chiamate mediche (giocatori a terra).","job":"EMS in servizio"},{"c":"/inspect","p":"","who":"job","d":"Diagnosi delle ferite del giocatore vicino.","job":"EMS"},{"c":"/carrypatient","p":"","who":"job","d":"Prendi in braccio il paziente.","job":"EMS"},{"c":"/dragpatient","p":"","who":"job","d":"Trascina il paziente. /stoppatientmovement lo lascia.","job":"EMS"},{"c":"/bodybag","p":"","who":"job","d":"Mette un morto nel sacco.","job":"EMS"},{"label":"Barella","key":["E"],"who":"job","d":"Interazione con la barella.","job":"EMS"},{"label":"A terra","key":["E","G","R"],"who":"all","d":"E chiama i medici, G (tenuto) ti arrendi, R (tenuto) respawn."}]},{"name":"Carcere","res":"","about":"","cmds":[{"c":"/jail","p":"[id] [minuti] [motivo]","who":"job","d":"Incarcera (bersaglio entro 10 m).","job":"Polizia, sceriffo"},{"c":"/unjail","p":"[id]","who":"job","d":"Scarcera.","job":"Polizia, sceriffo"},{"c":"/startcs","p":"[id] [quantità] [motivo]","who":"job","d":"Servizi sociali. /removecs li toglie.","job":"Polizia, sceriffo"},{"c":"/solitary","p":"[id] [minuti]","who":"job","d":"Isolamento. /rsolitary lo toglie.","job":"Polizia, sceriffo"},{"c":"/jailcp","p":"","who":"job","d":"Dashboard del carcere (anche con il prison_tablet).","job":"Polizia, sceriffo"},{"c":"/stopalarm","p":"","who":"job","d":"Ferma l’allarme di evasione.","job":"Polizia, sceriffo"}]},{"name":"DOJ","res":"","cmds":[{"c":"/dojmdt","p":"","who":"job","d":"Tablet MDT del DOJ.","job":"DOJ"},{"c":"/doj_outfit","p":"","who":"job","d":"Crea un outfit DOJ. /remove_doj_outfit li toglie.","job":"DOJ"},{"label":"Menu lavoro DOJ","key":["8"],"who":"job","d":"Nel menu radiale.","job":"DOJ","note":"Era Z, lo stesso del raggio voce."},{"c":"/firma","p":"","who":"all","d":"Firma digitale degli atti DOJ in attesa.","note":"Alias /firme"},{"c":"/mdtfix","p":"","who":"all","d":"Sblocca il mouse se il MDT si blocca."}]}]},{"name":"Lavori","scripts":[{"name":"Lavori multipli","res":"","cmds":[{"c":"/lavori","p":"","who":"all","d":"I tuoi lavori: cambia lavoro, servizio, stacca, lascia.","key":["F9"]}]},{"name":"Menu lavoro","res":"","cmds":[{"c":"/lavoro","p":"","who":"all","d":"Menu del tuo lavoro: conto aziendale (solo capo), fattura, punti del lavoro."}]},{"name":"Lavori pubblici","res":"","about":"G6, lavavetri, postino, elettricista.","cmds":[{"c":"/lasciaturno","p":"","who":"all","d":"Esci dal turno o dalla squadra."},{"c":"/bivio","p":"","who":"all","d":"Riapre la scelta del prossimo ordine."},{"label":"Durante il lavoro","key":["H","G","E"],"who":"all","d":"H lampada, G posa l’oggetto, E interagisci."}]},{"name":"Import","res":"","cmds":[{"c":"/import","p":"","who":"job","d":"Tablet degli ordini Import.","job":"Import in servizio"},{"c":"/importsgancia","p":"","who":"job","d":"Sblocca i pallet incastrati (20 m).","job":"Import in servizio"},{"c":"/import_posa_pacco","p":"","who":"all","d":"Posa a terra il pacco che porti.","key":["O"]}]},{"name":"Miniera","res":"","cmds":[{"label":"Cursore","key":["M"],"who":"all","d":"Mostra o nasconde il cursore nelle schermate della miniera."}]},{"name":"Netturbino","res":"","cmds":[{"c":"/garbagecancel","p":"","who":"all","d":"Annulla il turno (il capo lo annulla per tutta la squadra)."}]},{"name":"Spurgo","res":"","cmds":[{"c":"/swresume","p":"","who":"all","d":"Riprende il lavoro sospeso (entro 10 minuti, dentro il mezzo)."}]},{"name":"Taglialegna","res":"","cmds":[{"label":"Esci dalla gru","key":["I"],"who":"all","d":"Mentre comandi la gru."}]},{"name":"Giardiniere","res":"","cmds":[{"c":"/gardenboard","p":"","who":"all","d":"Bacheca dei contratti.","key":["F6"],"note":"Col tasto si apre solo a piedi: in macchina F6 apre i controlli del veicolo."},{"c":"/gardencancel","p":"","who":"all","d":"Abbandona il contratto (in squadra solo il capo)."},{"label":"Durante il lavoro","key":["E","G","H","Y","N"],"who":"all","d":"E usa, G fissa o posa, H scala, Y/N accetta o rifiuta l’invito in squadra."}]},{"name":"Pesca","res":"","about":"","cmds":[{"label":"Canna","key":["W / rotella giù","S / rotella su","R","G","X","H"],"who":"all","d":"Recupera, rilascia, blocca mulinello, modifica canna, abbandona, ancora."}]}]},{"name":"Case","scripts":[{"name":"Case Quasar","res":"","about":"","cmds":[{"c":"/casa","p":"","who":"all","d":"Menu della casa (proprietario o con le chiavi).","key":["Inizio"],"note":"Era F5. Funziona anche /houseMenu."},{"label":"Negozio mobili","key":["F3"],"who":"all","d":"Compra mobili e decorazioni."},{"label":"Modalità arredo","key":["F5","F6","G","K","Q","M","F3","INVIO"],"who":"all","d":"Cursore, nascondi UI, a terra, sposta/ruota, spazio, gizmo, camera libera, compra. Valgono solo mentre arredi."},{"c":"/creatorecase","p":"","who":"job","d":"Crea e vende case.","job":"Agenzia immobiliare, admin","note":"Prima era il tasto F7: ora solo da chat."},{"c":"/agencymenu","p":"","who":"job","d":"Menu del titolare dell’agenzia immobiliare.","job":"Agenzia immobiliare (con permesso)"}]}]},{"name":"Soldi, banca e telefono","scripts":[{"name":"Telefono","res":"","cmds":[{"label":"Telefono","key":["F1"],"who":"all","d":"Apre o chiude il telefono (serve l’oggetto)."},{"label":"Fotocamera","key":["X","Z","C"],"who":"all","d":"Blocca la fotocamera, inclina a sinistra o a destra."},{"label":"Telefono pubblico","key":["E"],"who":"all","d":"Usa una cabina."}]},{"name":"Fatture","res":"","cmds":[{"c":"/fatture","p":"","who":"all","d":"Storico delle tue fatture.","note":"Alias /lemiefatture"},{"c":"/fattura","p":"[numero ordine]","who":"job","d":"Riapre il preventivo di un ordine dell’officina.","job":"Officine"},{"c":"/propfix","p":"","who":"all","d":"Toglie oggetti rimasti in mano e sblocca il tablet.","note":"Alias /tabletfix. Anche /cursorfix, /posforceclose, /resetadmin."}]},{"name":"Banca e ATM","res":"","cmds":[{"label":"ATM","key":["E"],"who":"all","d":"Usa il bancomat. Cifre, INVIO e BACKSPACE sul tastierino."}]},{"name":"Diamond Laptop","res":"","cmds":[{"c":"/diamondpc","p":"","who":"all","d":"Apre o chiude il laptop."},{"c":"/laptopclose","p":"","who":"all","d":"Chiude il laptop se si blocca."}]}]},{"name":"Gioco, casinò e documenti","scripts":[{"name":"Casinò","res":"","about":"","cmds":[{"c":"/casino","p":"","who":"job","d":"Gestione: musica, muri, eventi VIP, dipendenti.","job":"Proprietario e dipendenti del casinò, admin"}]},{"name":"Documenti","res":"","cmds":[{"c":"/mostradoc","p":"","who":"all","d":"Mostra il documento in mano al giocatore che guardi.","key":["G"]},{"c":"/passadoc","p":"","who":"all","d":"Passa il documento in mano.","key":["H"]},{"c":"/fototessera","p":"[url https]","who":"all","d":"Imposta la tua fototessera (imgur o discord)."}]}]},{"name":"Illegale","scripts":[{"name":"Rapine","res":"","cmds":[{"c":"/rapine","p":"","who":"all","d":"Menu rapine: scelta, crew, mercato."},{"c":"/ricettatore","p":"","who":"all","d":"GPS sul ricettatore ai Docks."},{"c":"/closehud","p":"","who":"all","d":"Nasconde il pannello di avanzamento della rapina."}]},{"name":"Furgoni portavalori","res":"","cmds":[{"c":"/hacktruck","p":"","who":"all","d":"Hack del furgone (serve hackingtablet, entro 50 m)."}]},{"name":"Furto ruote","res":"","cmds":[{"c":"/lift","p":"","who":"all","d":"Alza l’auto sui cavalletti (E smonta, H prendi la ruota).","note":"Chi ha un furto ruote attivo, più polizia ed EMS."}]},{"name":"Tortura","res":"","cmds":[{"c":"/postazionetortura","p":"","who":"job","d":"Piazza una postazione (serve kit_tortura, massimo 2 per organizzazione).","job":"Gang e mafie"},{"c":"/rimuovitortura","p":"","who":"job","d":"Toglie la postazione vicina e ridà il kit.","job":"Gang e mafie"},{"label":"Durante il rapimento","key":["G","E","V","X"],"who":"job","d":"G rilascia l’ostaggio, E agguato dal furgone, V vista vittima, X lascia il carrello.","job":"Gang e mafie"}]}]},{"name":"Città e servizi","scripts":[{"name":"Radio","res":"","cmds":[{"c":"/radio","p":"","who":"all","d":"Apre la radio (serve l’oggetto radio)."}]},{"name":"Bahama Mamas","res":"","cmds":[{"label":"Pista da ballo","key":["E","X"],"who":"all","d":"E balla, X smetti."}]}]}],"ISSUES":[["Menu casa","da F5 a Inizio (/casa). Il creatore case non ha più tasto: /creatorecase."],["Radio","da Alt sinistro a Bloc Maiusc, anche la radio della polizia. Alt resta solo per l’occhio."],["Ruota rapida animazioni","da Bloc Maiusc a 6."],["Mini dispatch polizia","da U a 7 (U resta per le chiavi). Menu cane K9 da K a 9."],["Menu radiale (DOJ)","da Z a 8. Z resta per il raggio voce."],["Bacheca giardinieri","resta F6 ma solo a piedi; in macchina F6 apre i controlli del veicolo."],["Pannello allarmi polizia","mentre è aperto frecce, J, L e Ctrl servono solo al pannello."]],"NOTES":{"updated":"22/10/2026","extra":["Per problemi o dubbi apri una segnalazione in gioco con /report."]}};
+const DATA = __D.DATA, ISSUES = __D.ISSUES, NOTES = __D.NOTES;
+/*END DATA*/
+
+const WHO = { all: 'Tutti', job: 'Lavoro', admin: 'Admin', unk: 'Da provare' };
+const state = { q: '', who: '', test: false };
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const slug = s => s.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+function rows() {
+  const out = [];
+  for (const cat of DATA) for (const s of cat.scripts) for (const r of s.cmds) out.push({ cat, s, r });
+  return out;
+}
+function matches(cat, s, r) {
+  if (r.test && !state.test) return false;
+  if (state.who && r.who !== state.who) return false;
+  if (!state.q) return true;
+  const hay = [cat.name, s.name, s.res, s.about, r.c, r.p, r.d, r.job, r.note, (r.key || []).join(' ')].join(' ').toLowerCase();
+  return state.q.split(/\s+/).every(t => hay.includes(t));
+}
+function stats() {
+  const all = rows(), live = all.filter(x => !x.r.test);
+  const n = w => live.filter(x => x.r.who === w && x.r.c).length;
+  $('#stats').innerHTML = [
+    [live.filter(x => x.r.c).length, 'comandi'], [n('all'), 'giocatori'], [n('job'), 'lavori'], 
+    [live.filter(x => !x.r.c).length, 'tasti']
+  ].map(([v, l]) => `<div class="stat"><b>${v}</b><span>${l}</span></div>`).join('');
+}
+function render() {
+  let html = '', nav = '', total = 0;
+  for (const cat of DATA) {
+    let catHtml = '', count = 0;
+    for (const s of cat.scripts) {
+      const list = s.cmds.filter(r => matches(cat, s, r));
+      if (!list.length) continue;
+      count += list.length;
+      catHtml += `<article class="script"><header><h3>${esc(s.name)}</h3><code>${esc(s.res)}</code>${s.about ? `<p>${esc(s.about)}</p>` : ''}</header>` +
+        list.map(r => {
+          const cmd = r.c
+            ? `<button type="button" class="cmd" data-copy="${esc(r.c)}" title="Copia ${esc(r.c)}">${esc(r.c)}${r.p ? ` <span class="p">${esc(r.p)}</span>` : ''}</button>`
+            : `<span class="cmd key">${esc(r.label || 'Tasto')}</span>`;
+          const who = `<span class="who ${r.who}">${WHO[r.who]}</span>`;
+          const desc = `<div class="desc">${r.job ? `<span class="jobname">${esc(r.job)}</span> · ` : ''}${esc(r.d)}${r.test ? '<span class="tag">test</span>' : ''}${r.note ? `<span class="note">${esc(r.note)}</span>` : ''}</div>`;
+          const keys = `<div class="kbd">${(r.key || []).map(k => `<kbd>${esc(k)}</kbd>`).join('')}</div>`;
+          return `<div class="row">${cmd}${who}${desc}${keys}</div>`;
+        }).join('') + `</article>`;
+    }
+    if (!count) continue;
+    total += count;
+    const id = slug(cat.name);
+    html += `<section class="cat" id="${id}"><h2>${esc(cat.name)} <small>${count}</small></h2>${catHtml}</section>`;
+    nav += `<a href="#${id}">${esc(cat.name)} <i>${count}</i></a>`;
+  }
+  const issues = state.q ? '' : `<details class="issues" id="issues"${issuesOpen ? ' open' : ''}><summary>Tasti cambiati il 22/10 · ${ISSUES.length}</summary><ul>${ISSUES.map(([t, d]) => `<li><b>${esc(t)}:</b> ${esc(d)}</li>`).join('')}</ul></details>`;
+  $('#list').innerHTML = issues + (html || `<div class="empty">Nessun comando trovato${state.q ? ` per “${esc(state.q)}”` : ''}. Prova con un'altra parola o togli il filtro.</div>`);
+  const det = $('#issues'); if (det) det.addEventListener('toggle', () => { issuesOpen = det.open; });
+  $('#cats').innerHTML = nav + `<div class="legend"><span><span class="who all">Tutti</span> qualsiasi giocatore</span><span><span class="who job">Lavoro</span> solo chi ha quel lavoro</span></div>`;
+}
+
+let issuesOpen = true;
+$('#q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); render(); });
+
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  state.who = b.dataset.who;
+  document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  render();
+}));
+let toastT;
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
+  const text = b.dataset.copy;
+  const done = () => { const t = $('#toast'); t.textContent = 'Copiato ' + text; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 1400); };
+  try {
+    navigator.clipboard.writeText(text).then(done, () => { selectText(b); });
+  } catch (_) { selectText(b); }
+});
+function selectText(el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+stats();
+render();
+$('#foot').innerHTML = `Aggiornato al ${esc(NOTES.updated)}. ${NOTES.extra.map(esc).join(' ')}`;
+</script>
+
+</body>
+</html>
